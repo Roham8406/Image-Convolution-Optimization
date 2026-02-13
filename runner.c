@@ -28,22 +28,22 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
         return 2;
     }
 
-    fscanf(matFile, "%d", &data->deg);
+    int x = fscanf(matFile, "%d", &data->deg);
     int n = data->deg * data->deg;
-    n = (int)((n + 7)/8) * 8;                                  //Making sure it can adapt with ymm for summing
+    n = (int)((n + 15)/16) * 16;                                  //Making sure it can adapt with ymm for summing
     data->mat = calloc(n, sizeof(float));
     for (int i = 0; i < data->deg*data->deg; i++){
-        fscanf(matFile, "%f", data->mat + i);
+        x += fscanf(matFile, "%f", data->mat + i);
     }
     fclose(matFile);
     
     data->out = malloc(data->w * data->h * data->ch);
-    return 0;
+    return x == 0;
 }
 
 void saveFile(char *image, FilesDTO data, short isOpt) {
     char* outputPath = malloc(strlen(image) + 30);
-    sprintf(outputPath, isOpt ? "Opt_Convolved_%s" : "Convolved_%s", image);
+    sprintf(outputPath, isOpt ? "Convolved/Opt_%s" : "Convolved/%s", image);
     stbi_write_png(outputPath, data.w, data.h, data.ch, data.out, data.w * data.ch);
     free(outputPath);
 }
