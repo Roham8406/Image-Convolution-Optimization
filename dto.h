@@ -7,7 +7,7 @@ typedef struct {
     int w;                  //Image Width
     int h;                  //Image Height
     int ch;                 //Image Channels
-    double* mat;            //Kernel Matrix
+    float* mat;            //Kernel Matrix
     int deg;                //Kernel Degree
 } FilesDTO;
 

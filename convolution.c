@@ -1,7 +1,7 @@
 #include "dto.h"
 
 void convolve(FilesDTO input) {
-    int sum = 0;
+    float sum = 0;
     for (int i = input.deg*input.deg-1; i >= 0 ; i--) {
         sum += input.mat[i];
     }

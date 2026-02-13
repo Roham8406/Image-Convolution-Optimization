@@ -29,9 +29,11 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
     }
 
     fscanf(matFile, "%d", &data->deg);
-    data->mat = malloc(data->deg * data->deg * sizeof(double));
+    int n = data->deg * data->deg;
+    n = (int)((n + 7)/8) * 8;                                  //Making sure it can adapt with ymm for summing
+    data->mat = calloc(n, sizeof(float));
     for (int i = 0; i < data->deg*data->deg; i++){
-        fscanf(matFile, "%lf", data->mat + i);
+        fscanf(matFile, "%f", data->mat + i);
     }
     fclose(matFile);
     
