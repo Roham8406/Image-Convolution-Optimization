@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include "convolution.c"
+#include "optimizedConvolution.c"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -38,14 +39,16 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
     return 0;
 }
 
-void tidyup(char* image, FilesDTO data) {
-    char* outputPath = malloc(strlen(image) + 20);
-    sprintf(outputPath, "Convolved_%s", image);
+void saveFile(char *image, FilesDTO data, short isOpt) {
+    char* outputPath = malloc(strlen(image) + 30);
+    sprintf(outputPath, isOpt ? "Opt_Convolved_%s" : "Convolved_%s", image);
     stbi_write_png(outputPath, data.w, data.h, data.ch, data.out, data.w * data.ch);
+    free(outputPath);
+}
 
+void tidyup(FilesDTO data) {
     stbi_image_free(data.in);
     free(data.out);
-    free(outputPath);
     free(data.mat);
 }
 
@@ -74,11 +77,19 @@ int main(int argc, char** argv) {
     }
     
     
-    clock_t startTime = clock();
+    clock_t start1 = clock();
     convolve(data);
-    clock_t endTime = clock();
+    clock_t end1 = clock();
+    saveFile(argv[1], data, 0);
 
-    tidyup(argv[1], data);
-    printf("Convolution took %.6f seconds\n", (double)(endTime - startTime) / CLOCKS_PER_SEC);
+    clock_t start2 = clock();
+    convolveOptimized(data);
+    clock_t end2 = clock();
+    saveFile(argv[1], data, 1);
+
+    tidyup(data);
+    printf("Convolution took: \t\t\t %2.6fms\t\n", (double)(end1 - start1) / CLOCKS_PER_SEC * 1000);
+    printf("Optiomized Convolution took: \t\t %2.6fms\n", (double)(end2 - start2) / CLOCKS_PER_SEC * 1000);
+    printf("Optimized Version is faster by: \t %2.3f%%\n", (double) (end1 - start1) / (end2 - start2) * 100 - 100);
     return 0;
 }
