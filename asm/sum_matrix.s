@@ -29,6 +29,8 @@ loop:
     pshufd  xmm1, xmm0, 1 
     paddd   xmm0, xmm1 
     movd    eax, xmm0
-
-    
+    test    eax, eax
+    jg      positive
+    mov     eax, 1
+positive:  
     ret

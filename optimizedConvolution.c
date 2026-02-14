@@ -5,7 +5,6 @@ extern int sum_matrix(int* mat, int size);
 void convolveOptimized(FilesDTO input) {
     int sum = sum_matrix(input.mat, input.deg*input.deg);
     printf("%d", sum);
-    sum = sum > 0.0001 ? sum : 1;
     int centre = input.deg/2;
     for (int i = 0; i < input.w; i++) {
         for (int j = 0; j < input.h; j++) {

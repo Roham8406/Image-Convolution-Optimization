@@ -5,8 +5,7 @@ void convolve(FilesDTO input) {
     for (int i = input.deg*input.deg-1; i >= 0 ; i--) {
         sum += input.mat[i];
     }
-    printf("%d", sum);
-    sum = sum > 0.0001 ? sum : 1;
+    sum = sum > 0 ? sum : 1;
     int centre = input.deg/2;
     for (int i = 0; i < input.w; i++) {
         for (int j = 0; j < input.h; j++) {
