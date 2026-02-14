@@ -1,31 +1,34 @@
 .section .note.GNU-stack,"",@progbits
 .intel_syntax noprefix
 
-.data
-one:    .float 1.0         
 .text
 .global sum_matrix
 sum_matrix:
 
-    vxorps  ymm0, ymm0, ymm0
-    vxorps  ymm1, ymm1, ymm1
-    vxorps  ymm2, ymm2, ymm2
-    vxorps  ymm3, ymm3, ymm3
+    vpxor  ymm0, ymm0, ymm0
+    vpxor  ymm1, ymm1, ymm1
+    vpxor  ymm2, ymm2, ymm2
+    vpxor  ymm3, ymm3, ymm3
 
 loop:
-    vmovups ymm2, [rdi]
-    vmovups ymm3, [rdi+32]
-    vaddps  ymm0, ymm0, ymm2
-    vaddps  ymm1, ymm1, ymm3
+    vmovdqu ymm2, [rdi]
+    vmovdqu ymm3, [rdi+32]
+    vpaddd  ymm0, ymm0, ymm2
+    vpaddd  ymm1, ymm1, ymm3
     add     rdi, 64
     sub     esi, 16
     jg      loop
 
-    vaddps  ymm0, ymm0, ymm1
+    vpaddd  ymm0, ymm0, ymm1
 
-    vextractf128 xmm1, ymm0, 1  
-    vaddps xmm0, xmm0, xmm1
-    vhaddps xmm0, xmm0, xmm0
-    vhaddps xmm0, xmm0, xmm0
+    vextracti128 xmm1, ymm0, 1
+    vpaddd  xmm0, xmm0, xmm1
 
+    movhlps xmm1, xmm0 
+    paddd   xmm0, xmm1
+    pshufd  xmm1, xmm0, 1 
+    paddd   xmm0, xmm1 
+    movd    eax, xmm0
+
+    
     ret

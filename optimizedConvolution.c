@@ -1,15 +1,16 @@
 #include "dto.h"
 
-extern float sum_matrix(float* mat, int size);
+extern int sum_matrix(int* mat, int size);
 
 void convolveOptimized(FilesDTO input) {
-    float sum = sum_matrix(input.mat, input.deg*input.deg);
-    printf("%f", sum);
+    int sum = sum_matrix(input.mat, input.deg*input.deg);
+    printf("%d", sum);
+    sum = sum > 0.0001 ? sum : 1;
     int centre = input.deg/2;
     for (int i = 0; i < input.w; i++) {
         for (int j = 0; j < input.h; j++) {
             for (int k = 0; k < input.ch; k++) {
-                double cSum = 0.0;
+                int cSum = 0;
                 for (int l = -centre; l <= centre; l++) {
                     for (int m = -centre; m <= centre; m++) {
                         int i1 = i + l, j1 = j + m;

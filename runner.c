@@ -33,7 +33,7 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
     n = (int)((n + 15)/16) * 16;                                  //Making sure it can adapt with ymm for summing
     data->mat = calloc(n, sizeof(float));
     for (int i = 0; i < data->deg*data->deg; i++){
-        x += fscanf(matFile, "%f", data->mat + i);
+        x += fscanf(matFile, "%d", data->mat + i);
     }
     fclose(matFile);
     
