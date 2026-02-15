@@ -7,8 +7,8 @@ void convolve(FilesDTO input) {
     }
     sum = sum > 0 ? sum : 1;
     int centre = input.deg/2;
-    for (int i = 0; i < input.w; i++) {
-        for (int j = 0; j < input.h; j++) {
+    for (int i = centre; i < input.w - centre; i++) {
+        for (int j = centre; j < input.h - centre; j++) {
             for (int k = 0; k < input.ch; k++) {
                 int cSum = 0;
                 for (int l = -centre; l <= centre; l++) {

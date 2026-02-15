@@ -37,12 +37,18 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
     }
     fclose(matFile);
     
-    data->out = malloc(data->w * data->h * data->ch);
+    data->out = calloc(data->w * data->h * data->ch + 200, 1);
     return x == 0;
 }
 
 void saveFile(char *image, FilesDTO data, short isOpt) {
     char* outputPath = malloc(strlen(image) + 30);
+    sprintf(outputPath, "build/debug%d.bin", isOpt);
+    FILE *f = fopen(outputPath, "wb");
+    fwrite(data.out, sizeof(unsigned char), data.w * data.h * data.ch, f);
+    fclose(f);
+
+
     sprintf(outputPath, isOpt ? "Convolved/Opt_%s" : "Convolved/%s", image);
     stbi_write_png(outputPath, data.w, data.h, data.ch, data.out, data.w * data.ch);
     free(outputPath);
@@ -78,16 +84,16 @@ int main(int argc, char** argv) {
 
     }
     
+    clock_t start2 = clock();
+    convolveOptimized(data);
+    clock_t end2 = clock();
+    saveFile(argv[1], data, 1);
     
     clock_t start1 = clock();
     convolve(data);
     clock_t end1 = clock();
     saveFile(argv[1], data, 0);
 
-    clock_t start2 = clock();
-    convolveOptimized(data);
-    clock_t end2 = clock();
-    saveFile(argv[1], data, 1);
 
     tidyup(data);
     printf("Convolution took: \t\t\t %2.6fms\t\n", (double)(end1 - start1) / CLOCKS_PER_SEC * 1000);

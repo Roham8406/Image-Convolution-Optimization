@@ -1,28 +1,25 @@
 #include "dto.h"
 
 extern int sum_matrix(int* mat, int size);
+extern void convolve_asm(int cell, unsigned char* image, int channels, int xOffset, int yOffset);
+extern void store_convolve_result(unsigned char* out, int ch, int sum);
 
 void convolveOptimized(FilesDTO input) {
     int sum = sum_matrix(input.mat, input.deg*input.deg);
-    printf("%d", sum);
     int centre = input.deg/2;
-    for (int i = 0; i < input.w; i++) {
-        for (int j = 0; j < input.h; j++) {
-            for (int k = 0; k < input.ch; k++) {
-                int cSum = 0;
-                for (int l = -centre; l <= centre; l++) {
-                    for (int m = -centre; m <= centre; m++) {
-                        int i1 = i + l, j1 = j + m;
-                        i1 = i1 >= input.w ? i1-input.w : i1 < 0 ? i1 + input.w : i1;
-                        j1 = j1 >= input.h ? j1-input.h : j1 < 0 ? j1 + input.h : j1;
-                        cSum += input.in[(j1 * input.w + i1) * input.ch + k] * input.mat[(m + centre) * input.deg  + l + centre];
-                    }
+    for (int i = centre; i < input.w - 7 - centre; i+=8) {
+        for (int j = centre; j < input.h - centre; j++) {
+            asm volatile (
+                "vxorps %ymm0, %ymm0, %ymm0\n\t"
+                "vxorps %ymm1, %ymm1, %ymm1\n\t"
+                "vxorps %ymm2, %ymm2, %ymm2\n\t"
+            );
+            for (int ki = -centre; ki <= centre; ki++) {
+                for (int kj = -centre; kj <= centre; kj++) {
+                    convolve_asm(input.mat[(centre+ki)*input.deg + (centre+kj)], input.in + ((j + kj) * input.w + i + ki)* input.ch, input.ch, kj, ki);
                 }
-
-                cSum /= sum;
-                cSum = cSum > 255 ? 255 : cSum < 0 ? 0 : cSum;
-                input.out[(j*input.w + i)*input.ch+ k] = (unsigned char)cSum;
             }
+            store_convolve_result(input.out + (j*input.w + i) * input.ch, input.ch, sum);
         }
     }
 }
