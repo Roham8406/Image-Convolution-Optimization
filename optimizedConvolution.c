@@ -6,11 +6,11 @@ extern void store_convolve_result(unsigned char* out, int ch, int sum);
 
 void convolveOptimized(FilesDTO input) {
     if (input.ch != 4) {
-        return;
+        // return;
     }
     int sum = sum_matrix(input.mat, input.deg*input.deg);
     int centre = input.deg/2;
-    for (int i = centre; i < input.w - 7 - centre; i++) {
+    for (int i = centre; i < input.w - 1 - centre; i++) {
         for (int j = centre; j < input.h - centre; j++) {
             asm volatile (
                 "vxorps %ymm0, %ymm0, %ymm0\n\t"

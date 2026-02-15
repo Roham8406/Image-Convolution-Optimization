@@ -1,49 +1,34 @@
 section .note.GNU-stack
+section .text
 global store_convolve_result
 
-section .text
 store_convolve_result:
-    ; rdi = out pointer
-    ; rdx = sum (normalization)
+    ; rdi = destination pointer
+    ; rdx = normalization divisor
 
+    ; 1. Convert divisor to float and broadcast
     vmovd xmm4, edx
     vpbroadcastd ymm4, xmm4
     vcvtdq2ps ymm4, ymm4
 
-    ; Normalize: Int -> Float -> Div -> Int
+    ; 2. Convert accumulated sums in ymm0 to float and divide
     vcvtdq2ps ymm0, ymm0
-    vcvtdq2ps ymm1, ymm1
-    vcvtdq2ps ymm2, ymm2
-    vcvtdq2ps ymm3, ymm3
-
     vdivps ymm0, ymm0, ymm4
-    vdivps ymm1, ymm1, ymm4
-    vdivps ymm2, ymm2, ymm4
-    vdivps ymm3, ymm3, ymm4
 
-    vcvtps2dq ymm0, ymm0 ; R (8x 32-bit)
-    vcvtps2dq ymm1, ymm1 ; G
-    vcvtps2dq ymm2, ymm2 ; B
-    vcvtps2dq ymm3, ymm3 ; A
+    ; 3. Convert back to 32-bit integers (rounding to nearest)
+    vcvtps2dq ymm0, ymm0 
 
-    ; --- THE FIX: INTERLEAVING ---
-    ; Interleave R and G
-    vpunpckldq ymm4, ymm0, ymm1 ; [R0 G0 R1 G1 | R4 G4 R5 G5]
-    vpunpckhdq ymm5, ymm0, ymm1 ; [R2 G2 R3 G3 | R6 G6 R7 G7]
-
-    ; Interleave B and A
-    vpunpckldq ymm6, ymm2, ymm3 ; [B0 A0 B1 A1 | B4 A4 B5 A5]
-    vpunpckhdq ymm7, ymm2, ymm3 ; [B2 A2 B3 A3 | B6 A6 B7 A7]
-
-    ; Combine into RGBA 32-bit pixels
-    vpunpcklqdq ymm0, ymm4, ymm6 ; Pixel 0, 1 (Lower 128) | Pixel 4, 5 (Upper 128)
-    vpunpckhqdq ymm1, ymm4, ymm6 ; Pixel 2, 3 (Lower 128) | Pixel 6, 7 (Upper 128)
+    ; 4. Pack 32-bit -> 16-bit (Unsigned Saturate)
+    ; This converts 8x 32-bit ints to 8x 16-bit ints in the lower half of each 128-bit lane
+    vpackusdw ymm0, ymm0, ymm0
     
-    ; Pack to 8-bit
-    ; Note: Since we are writing to a 4-channel image, we pack 32->16->8
-    vpackusdw ymm0, ymm0, ymm1
-    vpackuswb ymm0, ymm0, ymm0 ; This is a simplified pack for the first 8 pixels
+    ; 5. Move the high 128 bits to a temporary xmm register to prepare for final pack
+    vextracti128 xmm1, ymm0, 1
     
-    ; Write the final 32 bytes (8 RGBA pixels)
-    vmovdqu [rdi], ymm0
+    ; 6. Pack 16-bit -> 8-bit (Unsigned Saturate)
+    ; This is the fix! 'us' allows values up to 255.
+    vpackuswb xmm0, xmm0, xmm1
+    
+    ; 7. Store the 8 bytes (2 pixels) to memory
+    vmovq [rdi], xmm0
     ret
