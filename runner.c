@@ -22,12 +22,12 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
         return 1;
     }
 
-    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
+    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
     if (!data->in) {
         
         return 2;
     }
-    // data->ch = 4;
+    data->ch = 4;
 
     int x = fscanf(matFile, "%d", &data->deg);
     int n = data->deg * data->deg;

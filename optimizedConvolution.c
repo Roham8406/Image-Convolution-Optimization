@@ -10,7 +10,7 @@ void convolveOptimized(FilesDTO input) {
     }
     int sum = sum_matrix(input.mat, input.deg*input.deg);
     int centre = input.deg/2;
-    for (int i = centre; i < input.w - 1 - centre; i++) {
+    for (int i = centre; i < input.w - 1 - centre; i+=2) {
         for (int j = centre; j < input.h - centre; j++) {
             asm volatile (
                 "vxorps %ymm0, %ymm0, %ymm0\n\t"
