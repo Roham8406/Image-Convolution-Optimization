@@ -22,11 +22,12 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
         return 1;
     }
 
-    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
+    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
     if (!data->in) {
         
         return 2;
     }
+    data->ch = 4;
 
     int x = fscanf(matFile, "%d", &data->deg);
     int n = data->deg * data->deg;
@@ -37,12 +38,18 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
     }
     fclose(matFile);
     
-    data->out = malloc(data->w * data->h * data->ch);
+    data->out = calloc(data->w * data->h * data->ch + 200, 1);
     return x == 0;
 }
 
 void saveFile(char *image, FilesDTO data, short isOpt) {
     char* outputPath = malloc(strlen(image) + 30);
+    sprintf(outputPath, "build/debug%d.bin", isOpt);
+    FILE *f = fopen(outputPath, "wb");
+    fwrite(data.out, sizeof(unsigned char), data.w * data.h * data.ch, f);
+    fclose(f);
+
+
     sprintf(outputPath, isOpt ? "Convolved/Opt_%s" : "Convolved/%s", image);
     stbi_write_png(outputPath, data.w, data.h, data.ch, data.out, data.w * data.ch);
     free(outputPath);
@@ -59,6 +66,9 @@ int main(int argc, char** argv) {
         printf("Usage: ./convolution.out [image input path] [convolution matrix path]\n");
         return 1;
     }
+    // argc = 3;
+    // strcpy(argv[1], "Assets/PM.png");
+    // strcpy(argv[2], "Assets/matrix.txt");
     if (access(argv[1], F_OK)) {
         printf("File Not Found!\n");
         return 1;
@@ -77,17 +87,18 @@ int main(int argc, char** argv) {
         }
 
     }
+
     
-    
+    clock_t start2 = clock();
+    convolveOptimized(data);
+    clock_t end2 = clock();
+    saveFile(argv[1], data, 1);
+
     clock_t start1 = clock();
     convolve(data);
     clock_t end1 = clock();
     saveFile(argv[1], data, 0);
 
-    clock_t start2 = clock();
-    convolveOptimized(data);
-    clock_t end2 = clock();
-    saveFile(argv[1], data, 1);
 
     tidyup(data);
     printf("Convolution took: \t\t\t %2.6fms\t\n", (double)(end1 - start1) / CLOCKS_PER_SEC * 1000);
