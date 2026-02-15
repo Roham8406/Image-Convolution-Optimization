@@ -14,9 +14,6 @@ void convolveOptimized(FilesDTO input) {
         for (int j = centre; j < input.h - centre; j++) {
             asm volatile (
                 "vxorps %ymm0, %ymm0, %ymm0\n\t"
-                "vxorps %ymm1, %ymm1, %ymm1\n\t"
-                "vxorps %ymm2, %ymm2, %ymm2\n\t"
-                "vxorps %ymm3, %ymm3, %ymm3\n\t"
             );
             for (int ki = -centre; ki <= centre; ki++) {
                 for (int kj = -centre; kj <= centre; kj++) {
