@@ -22,11 +22,13 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
         return 1;
     }
 
-    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
+    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
     if (!data->in) {
         
         return 2;
     }
+    data->ch = 4;
+    printf("%d", data->ch);
 
     int x = fscanf(matFile, "%d", &data->deg);
     int n = data->deg * data->deg;
@@ -60,11 +62,14 @@ void tidyup(FilesDTO data) {
     free(data.mat);
 }
 
-int main(int argc, char** argv) {
-    if (argc != 3) {
-        printf("Usage: ./convolution.out [image input path] [convolution matrix path]\n");
-        return 1;
-    }
+int main(int argc, char argv[3][30]) {
+    // if (argc != 3) {
+    //     printf("Usage: ./convolution.out [image input path] [convolution matrix path]\n");
+    //     return 1;
+    // }
+    argc = 3;
+    strcpy(argv[1], "Assets/PM.png");
+    strcpy(argv[2], "Assets/matrix.txt");
     if (access(argv[1], F_OK)) {
         printf("File Not Found!\n");
         return 1;
@@ -83,12 +88,13 @@ int main(int argc, char** argv) {
         }
 
     }
+
     
     clock_t start2 = clock();
     convolveOptimized(data);
     clock_t end2 = clock();
     saveFile(argv[1], data, 1);
-    
+        
     clock_t start1 = clock();
     convolve(data);
     clock_t end1 = clock();
