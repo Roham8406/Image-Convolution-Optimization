@@ -14,7 +14,7 @@
 #include "Library/stb_image_write.h"
 #include "dto.h"
 
-int prepare(char *image, char* matrix, FilesDTO* data) {
+int prepare(char *image, char* matrix, FilesDTO* data, short forceGS) {
     FILE *matFile = fopen(matrix, "r");
 
     if (!matFile) {
@@ -22,12 +22,20 @@ int prepare(char *image, char* matrix, FilesDTO* data) {
         return 1;
     }
 
-    data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
-    if (!data->in) {
-        
+    if (forceGS) {
+        data->in = stbi_load(image, &data->w, &data->h, &data->ch, 1);
+        data->ch = 1;
+    } else {
+        data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
+        if (data->ch == 3 || data->ch > 4) {
+            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
+            data->ch = 4;
+        }
+    }
+
+    if (!data->in) {        
         return 2;
     }
-    data->ch = 4;
 
     int x = fscanf(matFile, "%d", &data->deg);
     int n = data->deg * data->deg;
@@ -74,7 +82,7 @@ int main(int argc, char** argv) {
         return 1;
     }
     FilesDTO data;
-    switch (prepare(argv[1], argv[2], &data)) {
+    switch (prepare(argv[1], argv[2], &data, 0)) {
         case 0: break;
         case 1: {
             printf("Matrix Not Found!\n");
@@ -88,16 +96,17 @@ int main(int argc, char** argv) {
 
     }
 
-    
+    clock_t start1 = clock();
+    convolve(data);
+    clock_t end1 = clock();
+    saveFile(argv[1], data, 0);
+        
     clock_t start2 = clock();
     convolveOptimized(data);
     clock_t end2 = clock();
     saveFile(argv[1], data, 1);
 
-    clock_t start1 = clock();
-    convolve(data);
-    clock_t end1 = clock();
-    saveFile(argv[1], data, 0);
+
 
 
     tidyup(data);
