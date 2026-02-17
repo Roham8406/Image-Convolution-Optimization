@@ -31,12 +31,12 @@ convolve_asm:
 
     ; Matrix Index: (centre + ki) * deg + (centre + kj)
     movsxd rax, r11d
-    movsxd rbx, r14d
+    movsxd rbx, r15d
     add rax, rbx
     imul rax, r9
     
     movsxd rbx, r11d
-    movsxd r10, r15d
+    movsxd r10, r14d
     add rbx, r10
     add rax, rbx
     
