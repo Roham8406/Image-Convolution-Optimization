@@ -11,7 +11,7 @@ void checkImage(char *image) {
 
     clock_t start1 = clock();
     convolveOptimized(data);
-    long long c1 = threshold(data.out, 127, ((long long) (data.w)) * data.h * data.ch);
+    long long c1 = threshold(data.out, 135, ((long long) (data.w)) * data.h * data.ch);
     clock_t end1 = clock();
     saveFile(image, data, 0); //Not Optimzed ~~ Vert
 
@@ -29,13 +29,13 @@ void checkImage(char *image) {
     printf("Vertical sharp edges count: \t %lld\n", c1);
     printf("Horizental sharp edges count: \t %lld\n", c2);
     printf("%f\n", ((double) c1) / c2);
-    printf(c1 > c2 ? "It's a tower." : "It's an Iranian historical architecture!");
+    printf(c1 > c2 ? "The Architecture is Vicotorian." : "The Architecture is Iraninan.");
     printf("\n****************************************\n\n\n");
 }
 
 int main() {
     char path[50];
-    for (int i = 1; i < 12; i++) {
+    for (int i = 1; i < 16; i++) {
         sprintf(path, "Assets/TowerCheck/%d.jpg", i);
         checkImage(path);
     }
