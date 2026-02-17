@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
         return 1;
     }
     FilesDTO data;
-    switch (prepare(argv[1], argv[2], &data, 0)) {
+    switch (prepare(argv[1], argv[2], &data, 1)) {
         case 0: break;
         case 1: {
             printf("Matrix Not Found!\n");
