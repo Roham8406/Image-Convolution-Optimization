@@ -1,0 +1,135 @@
+*** Assets/TowerCheck/1.jpg ***
+Progress took: 		 62.819000ms
+Victorian sharp edges count: 	 24032 	 143260
+Iraninan sharp edges count: 	 19676 	 171616 	 160864 	 144696
+Score: 0.222914
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/2.jpg ***
+Progress took: 		 80.956000ms
+Victorian sharp edges count: 	 111206 	 429224
+Iraninan sharp edges count: 	 120928 	 482598 	 491892 	 505678
+Score: 0.590182
+The Architecture is Iraninan.
+****************************************
+
+
+*** Assets/TowerCheck/3.jpg ***
+Progress took: 		 83.414000ms
+Victorian sharp edges count: 	 63728 	 179550
+Iraninan sharp edges count: 	 42624 	 291322 	 280208 	 277324
+Score: 0.245326
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/4.jpg ***
+Progress took: 		 77.540000ms
+Victorian sharp edges count: 	 72956 	 256628
+Iraninan sharp edges count: 	 38834 	 301392 	 316092 	 265446
+Score: 0.307701
+The Architecture is Iraninan.
+****************************************
+
+
+*** Assets/TowerCheck/5.jpg ***
+Progress took: 		 80.437000ms
+Victorian sharp edges count: 	 140652 	 406356
+Iraninan sharp edges count: 	 70404 	 456972 	 454400 	 391432
+Score: 0.441113
+The Architecture is Iraninan.
+****************************************
+
+
+*** Assets/TowerCheck/6.jpg ***
+Progress took: 		 79.858000ms
+Victorian sharp edges count: 	 62394 	 325366
+Iraninan sharp edges count: 	 71568 	 416050 	 425474 	 437284
+Score: 0.495792
+The Architecture is Iraninan.
+****************************************
+
+
+*** Assets/TowerCheck/7.jpg ***
+Progress took: 		 77.051000ms
+Victorian sharp edges count: 	 37304 	 288710
+Iraninan sharp edges count: 	 63610 	 327546 	 359686 	 407532
+Score: 0.453152
+The Architecture is Iraninan.
+****************************************
+
+
+*** Assets/TowerCheck/8.jpg ***
+Progress took: 		 74.961000ms
+Victorian sharp edges count: 	 18970 	 178600
+Iraninan sharp edges count: 	 17786 	 241782 	 234374 	 230138
+Score: 0.270778
+The Architecture is Iraninan.
+****************************************
+
+
+*** Assets/TowerCheck/9.jpg ***
+Progress took: 		 170.594000ms
+Victorian sharp edges count: 	 59780 	 301524
+Iraninan sharp edges count: 	 51568 	 330678 	 334302 	 321524
+Score: 0.171776
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/10.jpg ***
+Progress took: 		 174.464000ms
+Victorian sharp edges count: 	 116838 	 304198
+Iraninan sharp edges count: 	 43038 	 363252 	 359756 	 235596
+Score: 0.133676
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/11.jpg ***
+Progress took: 		 189.207000ms
+Victorian sharp edges count: 	 307126 	 501826
+Iraninan sharp edges count: 	 95666 	 558244 	 563144 	 344064
+Score: 0.143071
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/12.jpg ***
+Progress took: 		 184.674000ms
+Victorian sharp edges count: 	 349966 	 664672
+Iraninan sharp edges count: 	 158918 	 717280 	 719766 	 438104
+Score: 0.241937
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/13.jpg ***
+Progress took: 		 204.169000ms
+Victorian sharp edges count: 	 93184 	 291812
+Iraninan sharp edges count: 	 6982 	 450194 	 400688 	 307850
+Score: 0.127459
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/14.jpg ***
+Progress took: 		 179.118000ms
+Victorian sharp edges count: 	 147962 	 380034
+Iraninan sharp edges count: 	 29476 	 529738 	 593502 	 465376
+Score: 0.199859
+The Architecture is Victorian.
+****************************************
+
+
+*** Assets/TowerCheck/15.jpg ***
+Progress took: 		 105.600000ms
+Victorian sharp edges count: 	 167596 	 341818
+Iraninan sharp edges count: 	 49850 	 438160 	 432944 	 310386
+Score: 0.220589
+The Architecture is Victorian.
+****************************************
+
+

@@ -24,7 +24,7 @@ void checkImage(char *image, int isVicotrian) {
     convolveOptimized(data);
     long long c1 = threshold(data.out, 145, ((long long) (data.w)) * data.h * data.ch);
     sum1 += clock();
-    saveFile(image, data, 1); //Optimzed ~~ Vert
+    // saveFile(image, data, 1); //Optimzed ~~ Vert
 
 
     loadMat("Assets/TowerCheck/Curve1.txt", &data);
@@ -32,21 +32,20 @@ void checkImage(char *image, int isVicotrian) {
     convolveOptimized(data);
     long long c2 = threshold(data.out, 135, ((long long) (data.w)) * data.h * data.ch);
     sum1 += clock();
-    loadMat("Assets/TowerCheck/Curve2.txt", &data);
 
+    loadMat("Assets/TowerCheck/Curve2.txt", &data);
     sum1 -= clock();
     convolveOptimized(data);
     long long c3 = threshold(data.out, 135, ((long long) (data.w)) * data.h * data.ch);
     sum1 += clock();
-    loadMat("Assets/TowerCheck/Curve3.txt", &data);
 
+    loadMat("Assets/TowerCheck/Curve3.txt", &data);
     sum1 -= clock();
     convolveOptimized(data);
     long long c4 = threshold(data.out, 135, ((long long) (data.w)) * data.h * data.ch);
     sum1 += clock();
     // saveFile(image, data, 0); //Not Optimzed ~~ Hori
     
-
     loadMat("Assets/TowerCheck/Vert.txt", &data);
     sum1 -= clock();
     convolveOptimized(data);
@@ -66,7 +65,7 @@ void checkImage(char *image, int isVicotrian) {
 
     tidyup(&data);
     printf("*** %s ***\n", image);
-    printf("Progress took: \t\t %2.6fms\n", (double) sum1 / CLOCKS_PER_SEC * 1000);
+    printf("Progress took: \t\t\t %2.6fms\n", (double) sum1 / CLOCKS_PER_SEC * 1000);
     printf("Victorian sharp edges count: \t %lld \t %lld\n", c5, c6);
     printf("Iraninan sharp edges count: \t %lld \t %lld \t %lld \t %lld\n", c1, c2, c3, c4);
     printf("Score: %f\n", score);
