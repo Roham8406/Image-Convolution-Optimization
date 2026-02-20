@@ -84,10 +84,7 @@ convolve_asm:
     vpackusdw ymm0, ymm0, ymm0  
     vextracti128 xmm1, ymm0, 1
     vpackuswb xmm0, xmm0, xmm1
-    ; movq rax, xmm0;
-    ; movhlps xmm1, xmm0   ; xmm1 lower 64 = xmm0 upper 64
-    ; movq rcx, xmm1
-
+    
     ; Output: (j * w + i) * ch
     movsxd rax, r13d
     imul rax, rcx
