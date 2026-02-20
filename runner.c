@@ -7,14 +7,14 @@
 #include "dto.h"
 
 
-int main(int argc, char** argv) {
+int main(int argc, char argv[3][50]) {
     if (argc != 3) {
         printf("Usage: ./convolution.out [image input path] [convolution matrix path]\n");
-        return 1;
+        // return 1;
     }
-    // argc = 3;
-    // strcpy(argv[1], "Assets/PM.png");
-    // strcpy(argv[2], "Assets/matrix.txt");
+    argc = 3;
+    strcpy(argv[1], "Assets/PM.png");
+    strcpy(argv[2], "Assets/matrix.txt");
     if (access(argv[1], F_OK)) {
         printf("File Not Found!\n");
         return 1;
@@ -33,6 +33,12 @@ int main(int argc, char** argv) {
         }
 
     }
+    for (int i = 0; i < 384; i++) {
+        data.in[ i]= i;
+    }
+    data.h = 4;
+    data.w = 48;
+    data.ch = 1;
 
     clock_t start1 = clock();
     convolve(data);

@@ -21,6 +21,7 @@ convolve_asm:
     mov r13d, [rbp+40]
     
     vxorps ymm0, ymm0, ymm0
+    ; movdqa xmm2, [mask8]
 
     mov r14d, r11d
     neg r14d
@@ -83,7 +84,9 @@ convolve_asm:
     vpackusdw ymm0, ymm0, ymm0  
     vextracti128 xmm1, ymm0, 1
     vpackuswb xmm0, xmm0, xmm1
-    psrldq xmm0, 4 
+    ; movq rax, xmm0;
+    ; movhlps xmm1, xmm0   ; xmm1 lower 64 = xmm0 upper 64
+    ; movq rcx, xmm1
 
     ; Output: (j * w + i) * ch
     movsxd rax, r13d
@@ -92,7 +95,9 @@ convolve_asm:
     add rax, rbx
     imul rax, r8 
     
-    vmovq [rdx + rax], xmm0 ; Store result to 'out' pointer + offset
+    vpextrd [rdx + rax], xmm0, 0
+    add rax, 4
+    vpextrd [rdx + rax], xmm0, 2
 
     pop r15
     pop r14
