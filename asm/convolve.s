@@ -82,7 +82,8 @@ convolve_asm:
     
     vpackusdw ymm0, ymm0, ymm0  
     vextracti128 xmm1, ymm0, 1
-    vpackuswb xmm0, xmm0, xmm1  
+    vpackuswb xmm0, xmm0, xmm1
+    psrldq xmm0, 4 
 
     ; Output: (j * w + i) * ch
     movsxd rax, r13d
