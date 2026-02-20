@@ -3,12 +3,8 @@
 #include <time.h>
 #include "optimizedConvolution.c"
 #include "utils.c"
-// #include "judgeThreshold.c"
 
 extern long long judge(unsigned char* out, unsigned char threshold, long long size);
-// long long judge(unsigned char* out, unsigned char thre, long long size) {
-//     threshold(out, thre, ((size+31)/32)*32);
-// }
 
 double calc(double hori, double nw, double ne, double n, double vert, double edge, long long size) {
     double curves = (nw + ne + n);

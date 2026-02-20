@@ -6,15 +6,16 @@ global judge
 
 judge:
     push rbx
-    xor rax, rax
 
     dec rsi       
     movzx   ecx, sil
     vmovd   xmm2, ecx
     vpbroadcastb ymm2, xmm2
 
-    vpcmpeqd ymm3, ymm3, ymm3
-    vpsllw   ymm3, ymm3, 7 
+    mov      eax, 0x80
+    vmovd    xmm3, eax
+    vpbroadcastb ymm3, xmm3
+    xor rax, rax
 
 loop:
     vmovdqu ymm1, [rdi]
