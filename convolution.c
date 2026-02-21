@@ -7,6 +7,7 @@ void convolve(FilesDTO input) {
     }
     sum = sum > 0 ? sum : 1;
     int centre = input.deg/2;
+    // int qwert = input.ch - 1 ? input.ch - 1 : 1;
     for (int i = centre; i < input.w - centre; i++) {
         for (int j = centre; j < input.h - centre; j++) {
             for (int k = 0; k < input.ch; k++) {
@@ -24,6 +25,7 @@ void convolve(FilesDTO input) {
                 cSum = cSum > 255 ? 255 : cSum < 0 ? 0 : cSum;
                 input.out[(j*input.w + i)*input.ch+ k] = (unsigned char)cSum;
             }
+        if (input.ch != 1) input.out[(j*input.w + i)*input.ch+ input.ch - 1] = input.in[(j*input.w + i)*input.ch+ input.ch - 1];
         }
     }
 }
