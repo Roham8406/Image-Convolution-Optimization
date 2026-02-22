@@ -8,6 +8,15 @@
 #include "Library/stb_image_write.h"
 #include "dto.h"
 
+
+void copyDTO(FilesDTO* a, FilesDTO* b) {
+    a->in = b->in;
+    a->w = b->w;
+    a->h = b->h;
+    a->ch = b->ch;
+    a->deg = b->deg;
+}
+
 int loadMat(char* matrix, FilesDTO* data) {
     if (data->mat) free(data->mat);
     FILE *matFile = fopen(matrix, "r");
@@ -28,20 +37,23 @@ int loadMat(char* matrix, FilesDTO* data) {
 }
 
 int prepare(char *image, char* matrix, FilesDTO* data, short forceGS) {
-    if (forceGS) {
-        data->in = stbi_load(image, &data->w, &data->h, &data->ch, 1);
-        data->ch = 1;
-    } else {
-        data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
-        if (data->ch == 3 || data->ch > 4) {
-            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
-            data->ch = 4;
+    if (image) {
+        if (forceGS) {
+            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 1);
+            data->ch = 1;
+        } else {
+            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
+            if (data->ch == 3 || data->ch > 4) {
+                data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
+                data->ch = 4;
+            }
+        }
+        if (!data->in) {        
+            return 2;
         }
     }
 
-    if (!data->in) {        
-        return 2;
-    }
+    
 
     int x = loadMat(matrix, data);
     
