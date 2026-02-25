@@ -5,32 +5,31 @@
 .global sum_matrix
 sum_matrix:
 
-	vpxor	ymm0,	ymm0,	ymm0
-	vpxor	ymm1,	ymm1,	ymm1
-	vpxor	ymm2,	ymm2,	ymm2
-	vpxor	ymm3,	ymm3,	ymm3
-
+	vpxor	ymm0,	ymm0,	ymm0		#صفر کردن ثبات به جهت انباشته‌گر
+	vpxor	ymm1,	ymm1,	ymm1		#صفر کردن ثبات به جهت انباشته‌گر
+	vpxor	ymm2,	ymm2,	ymm2		#صفرکردن ثبات
+	vpxor	ymm3,	ymm3,	ymm3		#صفر کردن ثبات
 loop:
-	vmovdqu	ymm2,	[rdi]
-	vmovdqu	ymm3,	[rdi+32]
-	vpaddd	ymm0,	ymm0,	ymm2
-	vpaddd	ymm1,	ymm1,	ymm3
-	add		rdi,	64
-	sub		esi,	16
-	jg		loop
+	vmovdqu	ymm2,	[rdi]				#تعداد 8 عدد ۳۲ بیتی در رجیستر بارگذاری میگردد
+	vmovdqu	ymm3,	[rdi+32]			#تعداد ۸ عدد ۳۲ بیتی بعدی در رجیستر بعدی بارگذاری میگردد
+	vpaddd	ymm0,	ymm0,	ymm2		#انباشته کردن
+	vpaddd	ymm1,	ymm1,	ymm3		#انباشته کردن
+	add		rdi,	64					#نشانه‌گر حافظه 64 بایت معادل 16 عدد ۳۲ بیتی جلو می‌رود
+	sub		esi,	16					#تعداد اعداد باقی‌مانده 16 تا کم می‌شود
+	jg		loop						#تا به هنگامی که رجیستر ای‌اس‌آی نامنفی است حلقه ادامه می‌یابد
 
-	vpaddd	ymm0,	ymm0,	ymm1
+	vpaddd	ymm0,	ymm0,	ymm1		#انباشته‌گرها جمع می‌شوند
 
-	vextracti128	xmm1,	ymm0,	1
-	vpaddd	xmm0,	xmm0,	xmm1
+	vextracti128	xmm1,	ymm0,	1	#ذخیرهٔ 128 بیت بالایی در اس‌اس‌ای
+	vpaddd	xmm0,	xmm0,	xmm1		#جمع انباشته‌گرها، هم‌اکنون 4 صف مجموع در ایکس‌ام‌ام‌صفر وجود دارد
 
-	movhlps	xmm1,	xmm0
-	paddd	xmm0,	xmm1
-	pshufd	xmm1,	xmm0,	1
-	paddd	xmm0,	xmm1
-	movd	eax,	xmm0
+	movhlps	xmm1,	xmm0				#ذخیرهٔ ۲ عدد بالایی در رجیستر دوم
+	paddd	xmm0,	xmm1				#انباشته‌کردن دو رجیستر
+	pshufd	xmm1,	xmm0,	1			#ذخیرهٔ عدد دوم در رجیستر دوم
+	paddd	xmm0,	xmm1				#انباشته کردن دو رجیستر
+	movd	eax,	xmm0				#انتقال
 	test	eax,	eax
-	jg		positive
-	mov		eax,	1
+	jg		positive					#اگر مثبت بود خودش را برگدن
+	mov		eax,	1					#در غیر این صورت ۱ را برگردان
 positive:
 	ret
