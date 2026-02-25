@@ -28,7 +28,7 @@ int loadMat(char* matrix, FilesDTO* data) {
     int x = fscanf(matFile, "%d", &data->deg);
     int n = data->deg * data->deg;
     n = (int)((n + 15)/16) * 16;                                  //Making sure it can adapt with ymm for summing
-    data->mat = calloc(n, sizeof(float));
+    data->mat = (int*)calloc(n, sizeof(float));
     for (int i = 0; i < data->deg*data->deg; i++){
         x += fscanf(matFile, "%d", data->mat + i);
     }
@@ -57,12 +57,12 @@ int prepare(char *image, char* matrix, FilesDTO* data, short forceGS) {
 
     int x = loadMat(matrix, data);
     
-    data->out = calloc(data->w * data->h * data->ch + 200, 1);
-    return x == 0;
+    data->out = (unsigned char*)calloc(data->w * data->h * data->ch + 200, 1);
+    return x;
 }
 
 void saveFile(char *image, FilesDTO data, short isOpt) {
-    char* outputPath = malloc(strlen(image) + 30);
+    char* outputPath = (char*) malloc(strlen(image) + 30);
     sprintf(outputPath, "build/debug%d.bin", isOpt);
     FILE *f = fopen(outputPath, "wb");
     fwrite(data.out, sizeof(unsigned char), data.w * data.h * data.ch, f);

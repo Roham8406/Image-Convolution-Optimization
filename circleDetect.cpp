@@ -2,16 +2,21 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include "utils.c"
 using namespace std;
 
-int detect(string x) {
+int detect(char* imagePath, char* matrixPath) {
 
-    // خواندن تصویر خاکستری
-    cv::Mat gray = cv::imread(x, cv::IMREAD_GRAYSCALE);
-    if (gray.empty()) {
-        printf("خطا در بارگذاری تصویر\n");
-        return -1;
-    }
+    // خواندن تصویر اصلی (رنگی)
+    cv::Mat original = cv::imread(imagePath, cv::IMREAD_COLOR);
+    
+    FilesDTO data = {0};
+
+    // لود تصویر و ماتریس
+    prepare(imagePath, matrixPath, &data, 1);
+
+    // تبدیل بافر ورودی به cv::Mat
+    cv::Mat gray(data.h, data.w, CV_8UC1, data.in);
 
     cv::Mat blurred, edges;
 
@@ -25,10 +30,7 @@ int detect(string x) {
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(edges, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-    // تبدیل تصویر به رنگی برای رسم دایره
-    cv::Mat output;
-    cv::cvtColor(gray, output, cv::COLOR_GRAY2BGR);
-
+    // رسم دایره‌ها روی تصویر رنگی اصلی
     for (size_t i = 0; i < contours.size(); i++) {
 
         // حذف کانتورهای کوچک
@@ -46,19 +48,24 @@ int detect(string x) {
         double ratio = area / circleArea;
 
         if (ratio > 0.7 && ratio < 1.3) {  
-            // رسم دایره روی تصویر
-            cv::circle(output, center, (int)radius, cv::Scalar(0,0,255), 2);
+            // رسم دایره روی تصویر رنگی اصلی
+            cv::circle(original, center, (int)radius, cv::Scalar(0,0,255), 2);
         }
     }
 
-    cv::imwrite("Convolved/" + x, output);
+    char end[50];
+    sprintf(end, "Convolved/%s", imagePath);
+    cv::imwrite(end, original);
 
-    printf("دایره‌ها رسم شدند.\n");
+    printf("دایره‌ها رسم شدند روی تصویر اصلی.\n");
     return 0;
 }
 
 int main() {
-    for (int i = 1; i <= 8; i++) {
-        detect("Assets/RectCheck/" + to_string(i) + ".jpg");
+    char path[50];
+    char mat[50] = "Assets/RectCheck/Blur.txt";
+    for (int i = 1; i <= 17; i++) {
+        sprintf(path, "Assets/RectCheck/%d.jpg", i);
+        detect(path, mat);
     }
 }
