@@ -14,6 +14,9 @@ void convolve(FilesDTO input) {
                 for (int l = -centre; l <= centre; l++) {
                     for (int m = -centre; m <= centre; m++) {
                         int i1 = i + l, j1 = j + m;
+                        i1 = i1 >= input.w ? i1-input.w : i1 < 0 ? i1 + input.w : i1;
+                        j1 = j1 >= input.h ? j1-input.h : j1 < 0 ? j1 + input.h : j1;
+                        
                         cSum += input.in[(j1 * input.w + i1) * input.ch + k] * 
                                 input.mat[(m + centre) * input.deg  + l + centre];      //محاسبهٔ ضرب درایهٔ ماتریس
                     }
@@ -23,7 +26,7 @@ void convolve(FilesDTO input) {
                 cSum = cSum > 255 ? 255 : cSum < 0 ? 0 : cSum;
                 input.out[(j*input.w + i)*input.ch+ k] = (unsigned char)cSum;           //ذخیرهٔ درایهٔ ماتریس
             }
-        if (input.ch != 1 && sum<=0) 
+        if (input.ch != 1) 
             input.out[(j*input.w + i)*input.ch+ input.ch - 1] = 
                 input.in[(j*input.w + i)*input.ch+ input.ch - 1];                       //جلوگیری از بی‌رنگی‌ توسط 0 شدن کانال آلفا
         }
