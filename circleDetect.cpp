@@ -32,7 +32,6 @@ clock_t detect(char* imagePath, char* matrixPath, int isOpt) {
     loadMat("Assets/RectCheck/Edge.txt", &data);
     time -= clock();
     conv(data);
-    time += clock();
 
     // saveFile(imagePath, data, 1);
     cv::Mat gray(data.h, data.w, CV_8UC1, data.out);
@@ -63,6 +62,7 @@ clock_t detect(char* imagePath, char* matrixPath, int isOpt) {
             cv::circle(original, center, (int)radius, cv::Scalar(0,0,255), 2);
         }
     }
+    time += clock();
 
     char end[50];
     sprintf(end, "Convolved/%s", imagePath);
