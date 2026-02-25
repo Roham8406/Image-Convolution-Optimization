@@ -18,7 +18,7 @@ void convolveOptimized(FilesDTO input) {
     }
     int sum = sum_matrix(input.mat, input.deg*input.deg);                   //جمع درایه‌های ماتریس
     int centre = input.deg/2;                                               //مرکز ماتریس هسته
-    for (int i = centre; i < input.w - centre; i+=8/input.ch) {             //بررسی 8 باید در هر دور
+    for (int i = centre; i < input.w - centre + 7; i+=8/input.ch) {         //بررسی 8 باید در هر دور
         for (int j = centre; j < input.h - centre; j++) {
             convolve_asm(input.mat, input.in, input.out,
                          input.w, input.ch, input.deg, sum, centre, i, j);  //کانوالو 8 بایت بدست آمده
