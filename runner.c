@@ -12,15 +12,8 @@ int main(int argc, char** argv) {
         printf("Usage: ./convolution.out [image input path] [convolution matrix path]\n");
         return 1;
     }
-    // argc = 3;
-    // strcpy(argv[1], "Assets/PM.png");
-    // strcpy(argv[2], "Assets/matrix.txt");
-    // if (access(argv[1], F_OK)) {
-    //     printf("File Not Found!\n");
-    //     return 1;
-    // }
     FilesDTO data;
-    switch (prepare(argv[1], argv[2], &data, 0)) {
+    switch (prepare(argv[1], argv[2], &data, 0)) {                          //آماده سازی برای کانوالو
         case 0: break;
         case 1: {
             printf("Matrix Not Found!\n");
@@ -33,22 +26,16 @@ int main(int argc, char** argv) {
         }
 
     }
-    // for (int i = 0; i < 384; i++) {
-    //     data.in[ i]= i;
-    // }
-    // data.h = 4;
-    // data.w = 48;
-    // data.ch = 1;
 
     clock_t start1 = clock();
-    convolve(data);
+    convolve(data);                                                         //کانوالو غیر بهینه
     clock_t end1 = clock();
-    saveFile(argv[1], data, 0);
+    saveFile(argv[1], data, 0);                                             // ذخیرهٔ فایل کانوالو شده
         
     clock_t start2 = clock();
-    convolveOptimized(data);
+    convolveOptimized(data);                                                //گانوالو بهینه
     clock_t end2 = clock();
-    saveFile(argv[1], data, 1);
+    saveFile(argv[1], data, 1);                                             //ذخیرهٔ فایل کانوالو شده
 
 
 

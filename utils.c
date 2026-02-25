@@ -9,7 +9,7 @@
 #include "dto.h"
 
 
-void copyDTO(FilesDTO* a, FilesDTO* b) {
+void copyDTO(FilesDTO* a, FilesDTO* b) {                            //بازتولید دی‌تی‌او
     a->in = b->in;
     a->w = b->w;
     a->h = b->h;
@@ -17,34 +17,33 @@ void copyDTO(FilesDTO* a, FilesDTO* b) {
     a->deg = b->deg;
 }
 
-int loadMat(const char* matrix, FilesDTO* data) {
-    if (data->mat) free(data->mat);
-    FILE *matFile = fopen(matrix, "r");
+int loadMat(const char* matrix, FilesDTO* data) {                   //بارگزاری مجدد ماتریس هسته
+    if (data->mat) free(data->mat);                                 //آزادسازی حافظه در صورت نیاز
+    FILE *matFile = fopen(matrix, "r");                             //باز کردن فایل
 
     if (!matFile) {
-        
         return 1;
     }
-    int x = fscanf(matFile, "%d", &data->deg);
+    int x = fscanf(matFile, "%d", &data->deg);                      //اولین عدد نشانه مرتبهٔ ماتریس است
     int n = data->deg * data->deg;
-    n = (int)((n + 15)/16) * 16;                                  //Making sure it can adapt with ymm for summing
+    n = (int)((n + 15)/16) * 16;                                    //اطمینان از قابلیت جمع زدن درایه‌های ماتریس با ymm
     data->mat = (int*)calloc(n, sizeof(float));
     for (int i = 0; i < data->deg*data->deg; i++){
-        x += fscanf(matFile, "%d", data->mat + i);
+        x += fscanf(matFile, "%d", data->mat + i);                  //خواندن داده‌های ماتریس
     }
-    fclose(matFile);
+    fclose(matFile);                                                //بستن فایل
     return x;
 }
 
-int prepare(char *image, const char* matrix, FilesDTO* data, short forceGS) {
+int prepare(char *image, const char* matrix, FilesDTO* data, short forceGS) {       //آماده‌سازی دی‌تی‌او
     if (image) {
         if (forceGS) {
-            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 1);
+            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 1);          //بارگذاری یک کاناله
             data->ch = 1;
         } else {
-            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);
+            data->in = stbi_load(image, &data->w, &data->h, &data->ch, 0);          //بارگذاری به هرگونه‌ای که نیاز است.
             if (data->ch == 3 || data->ch > 4) {
-                data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);
+                data->in = stbi_load(image, &data->w, &data->h, &data->ch, 4);      //اگر ۳ کاناله بود، ۴ کاناله می‌کنیم تا ۸ بایت خواندن برای اس‌اس‌ای، یک پیکسل در دو دور متاوت بررسی نشود
                 data->ch = 4;
             }
         }
@@ -55,27 +54,22 @@ int prepare(char *image, const char* matrix, FilesDTO* data, short forceGS) {
 
     
 
-    int x = loadMat(matrix, data);
+    int x = loadMat(matrix, data);                                                  //خواندن ماتریس
     
-    data->out = (unsigned char*)calloc(data->w * data->h * data->ch + 200, 1);
+    data->out = (unsigned char*)calloc(data->w * data->h * data->ch + 200, 1);      //آماده‌سازی تصویر خروجی
     return x;
 }
 
-void saveFile(char *image, FilesDTO data, short isOpt) {
+void saveFile(char *image, FilesDTO data, short isOpt) {                            //ذخیرهٔ تصویر خروجی
     char* outputPath = (char*) malloc(strlen(image) + 30);
-    sprintf(outputPath, "build/debug%d.bin", isOpt);
-    FILE *f = fopen(outputPath, "wb");
-    fwrite(data.out, sizeof(unsigned char), data.w * data.h * data.ch, f);
-    fclose(f);
-
 
     sprintf(outputPath, isOpt ? "Convolved/Opt_%s" : "Convolved/%s", image);
-    stbi_write_png(outputPath, data.w, data.h, data.ch, data.out, data.w * data.ch);
+    stbi_write_png(outputPath, data.w, data.h, data.ch, data.out, data.w * data.ch);//ذخیرهٔ تصویر
     free(outputPath);
 }
 
 
-void tidyup(FilesDTO* data) {
+void tidyup(FilesDTO* data) {    //آزادسازی حافظه
     stbi_image_free(data->in);
     free(data->out);
     free(data->mat);

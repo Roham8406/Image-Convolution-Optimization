@@ -2,13 +2,13 @@
 #define FILES_DTO
 
 typedef struct {
-    unsigned char* in;      //Input image
-    unsigned char* out;     //Output image
-    int w;                  //Image Width
-    int h;                  //Image Height
-    int ch;                 //Image Channels
-    int* mat;               //Kernel Matrix
-    int deg;                //Kernel Degree
+    unsigned char* in;      //تصویر ورودی
+    unsigned char* out;     //تصویر خروجی
+    int w;                  //عرض تصویر
+    int h;                  //ارتفاع تصویر
+    int ch;                 //تعداد کانال‌های تصویر
+    int* mat;               //ماتریس هسته
+    int deg;                //درجهٔ ماتریس هسته
 } FilesDTO;
 
 #endif
