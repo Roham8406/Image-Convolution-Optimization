@@ -3,6 +3,9 @@
 
 .text
 .global sum_matrix
+
+#rdi : Pointer
+#rsi : Size
 sum_matrix:
 
 	vpxor	ymm0,	ymm0,	ymm0		#صفر کردن ثبات به جهت انباشته‌گر
