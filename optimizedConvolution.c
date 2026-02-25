@@ -1,8 +1,16 @@
 #include "dto.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int sum_matrix(int* mat, int size);
 extern void convolve_asm(int* mat, unsigned char* in, unsigned char* out, 
                              int w, int ch, int deg, int sum, int centre, int i, int j);
+
+#ifdef __cplusplus
+}
+#endif
 
 void convolveOptimized(FilesDTO input) {
     if (input.ch != 4 && input.ch != 1) {

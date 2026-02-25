@@ -17,7 +17,7 @@ void copyDTO(FilesDTO* a, FilesDTO* b) {
     a->deg = b->deg;
 }
 
-int loadMat(char* matrix, FilesDTO* data) {
+int loadMat(const char* matrix, FilesDTO* data) {
     if (data->mat) free(data->mat);
     FILE *matFile = fopen(matrix, "r");
 
