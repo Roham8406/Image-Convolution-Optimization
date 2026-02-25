@@ -10,82 +10,72 @@ using namespace std;
 
 typedef void (*ConvolutionFunc)(FilesDTO data);
 
-// Global array of function pointers
-ConvolutionFunc convFuncs[2] = { convolve, convolveOptimized };
+ConvolutionFunc convFuncs[2] = { convolve, convolveOptimized }; //فانکشن پوینتر برای محاسبه مدت زمان بهینگی
 
-clock_t detect(char* imagePath, char* matrixPath, int isOpt) {
+clock_t detect(char* imagePath, int isOpt) {
 
-    cv::Mat original = cv::imread(imagePath, cv::IMREAD_COLOR);
+    cv::Mat original = cv::imread(imagePath, cv::IMREAD_COLOR); //عکس سه کاناله برای رسم نشانه‌ها
     
     FilesDTO data = {0};
-
     clock_t time = 0;
-
     ConvolutionFunc conv = convFuncs[isOpt ? 1 : 0];
 
-    // لود تصویر و ماتریس
-    prepare(imagePath, matrixPath, &data, 1);
+    prepare(imagePath, "Assets/RectCheck/Blur.txt", &data, 1);  //عکس یک کاناله برای آنالیز
     time -= clock();
-    conv(data);
-    memcpy(data.in, data.out, data.ch*data.w*data.h);
+    conv(data);                                                 //کانولوشن بلور گاوسی
+    memcpy(data.in, data.out, data.ch*data.w*data.h);           //آماده سازی کانولوشون دوم
     time += clock();
     loadMat("Assets/RectCheck/Edge.txt", &data);
     time -= clock();
-    conv(data);
+    conv(data);                                                 //کانولوشن پیدا کردن لبه‌ها
 
     // saveFile(imagePath, data, 1);
-    cv::Mat gray(data.h, data.w, CV_8UC1, data.out);
+    cv::Mat gray(data.h, data.w, CV_8UC1, data.out);            //تبدیل داده خام به cv
 
-    // پیدا کردن کانتور‌ها
     std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(gray, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(gray, contours, cv::RETR_EXTERNAL, 
+        cv::CHAIN_APPROX_SIMPLE);                               //بدست آوردن کانتورهای عکس کانوالو شده
 
-    // رسم دایره‌ها روی تصویر رنگی اصلی
     for (size_t i = 0; i < contours.size(); i++) {
-
-        // حذف کانتورهای کوچک
         double area = cv::contourArea(contours[i]);
-        if (area < 100)
-            continue;
+        if (area < 100) continue;                               //صرف نظر از کانتورهای کوچک
 
-        // محاسبه حداقل دایره محاطی
         cv::Point2f center;
         float radius;
-        cv::minEnclosingCircle(contours[i], center, radius);
+        cv::minEnclosingCircle(contours[i], center, radius);    //محاسبه دایره‌ٔ محاطی مینیمال
 
-        // بررسی دایره بودن تقریبی
-        double circleArea = CV_PI * radius * radius;
+        double circleArea = CV_PI * radius * radius;            //بررسی میزان خمیدگی دایره
         double ratio = area / circleArea;
 
         if (ratio > 0.7 && ratio < 1.3) {  
-            // رسم دایره روی تصویر رنگی اصلی
-            cv::circle(original, center, (int)radius, cv::Scalar(0,0,255), 2);
+            cv::circle(original, center, (int)radius,
+                        cv::Scalar(0,0,255), 2);                //رسم دایره
         }
     }
     time += clock();
 
     char end[50];
-    sprintf(end, "Convolved/%s", imagePath);
-    cv::imwrite(end, original);
+    sprintf(end, "Convolved/%s%s", isOpt ? "Opt_" : "",imagePath);
+    cv::imwrite(end, original);                                 //ذخیره تصویر
 
-    printf("%2.6fms\n", (double)(time) / CLOCKS_PER_SEC * 1000);
+    printf("%2.6fms\n", (double)(time) / CLOCKS_PER_SEC*1000);  //چاپ زمان مفید آنالیز
     return time;
 }
 
 int main() {
     char path[50];
-    char mat[50] = "Assets/RectCheck/Blur.txt";
     clock_t time = 0, optTime = 0;
     printf("Non optimized: \n");
     for (int i = 1; i <= 16; i++) {
         sprintf(path, "Assets/RectCheck/%d.jpg", i);
-        time += detect(path, mat, 0);
+        time += detect(path, 0);                                //بررسی تصاویر با کانولوشن غیر بهینه
     }
     printf("\n\n\nOptimized: \n");
     for (int i = 1; i <= 16; i++) {
         sprintf(path, "Assets/RectCheck/%d.jpg", i);
-        optTime += detect(path, mat, 1);
+        optTime += detect(path, 1);                             //بررسی تصاویر با کانولوشن بهینه
     }
 
-    printf("Optimized Version is faster by: \t %2.3f%%\n", (double) (time) / (optTime) * 100 - 100);
+    printf("Optimized Version is faster by: \t %2.3f%%\n",
+            (double) (time) / (optTime) * 100 - 100);           //محاسبهٔ میزان بهینگی
 }

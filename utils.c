@@ -36,7 +36,7 @@ int loadMat(const char* matrix, FilesDTO* data) {
     return x;
 }
 
-int prepare(char *image, char* matrix, FilesDTO* data, short forceGS) {
+int prepare(char *image, const char* matrix, FilesDTO* data, short forceGS) {
     if (image) {
         if (forceGS) {
             data->in = stbi_load(image, &data->w, &data->h, &data->ch, 1);
