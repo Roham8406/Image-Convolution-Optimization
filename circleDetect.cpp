@@ -65,15 +65,17 @@ clock_t detect(char* imagePath, int isOpt) {
 int main() {
     char path[50];
     clock_t time = 0, optTime = 0;
-    printf("Non optimized: \n");
-    for (int i = 1; i <= 16; i++) {
+    // printf("Non optimized: \n");
+    for (int i = 50; i <= 101; i++) {
+        printf("%d\n", i);
         sprintf(path, "Assets/RectCheck/%d.jpg", i);
         time += detect(path, 0);                                //بررسی تصاویر با کانولوشن غیر بهینه
-    }
-    printf("\n\n\nOptimized: \n");
-    for (int i = 1; i <= 16; i++) {
-        sprintf(path, "Assets/RectCheck/%d.jpg", i);
-        optTime += detect(path, 1);                             //بررسی تصاویر با کانولوشن بهینه
+    // }
+    // printf("\n\n\nOptimized: \n");
+    // for (int i = 7; i <= 33; i++) {
+    //     sprintf(path, "Assets/RectCheck/%d.jpg", i);
+        optTime += detect(path, 1);     
+        printf("\n");                        //بررسی تصاویر با کانولوشن بهینه
     }
 
     printf("Optimized Version is faster by: \t %2.3f%%\n",
