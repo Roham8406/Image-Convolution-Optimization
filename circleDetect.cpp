@@ -47,13 +47,14 @@ clock_t detect(char* imagePath, int isOpt) {
         double circleArea = CV_PI * radius * radius;            //بررسی میزان خمیدگی دایره
         double ratio = area / circleArea;
 
-        if (ratio > 0.7 && ratio < 1.3) {  
+        if (ratio > 0.6 && ratio < 1.4) {  
             cv::circle(original, center, (int)radius,
                         cv::Scalar(0,0,255), 2);                //رسم دایره
         }
     }
     time += clock();
 
+    tidyup(&data);
     char end[50];
     sprintf(end, "Convolved/%s%s", isOpt ? "Opt_" : "",imagePath);
     cv::imwrite(end, original);                                 //ذخیره تصویر
@@ -66,7 +67,7 @@ int main() {
     char path[50];
     clock_t time = 0, optTime = 0;
     // printf("Non optimized: \n");
-    for (int i = 50; i <= 100; i++) {
+    for (int i = 1; i <= 100; i++) {
         printf("%d\n", i);
         sprintf(path, "Assets/RectCheck/%d.jpg", i);
         time += detect(path, 0);                                //بررسی تصاویر با کانولوشن غیر بهینه
