@@ -66,7 +66,7 @@ int main() {
     char path[50];
     clock_t time = 0, optTime = 0;
     // printf("Non optimized: \n");
-    for (int i = 50; i <= 101; i++) {
+    for (int i = 50; i <= 100; i++) {
         printf("%d\n", i);
         sprintf(path, "Assets/RectCheck/%d.jpg", i);
         time += detect(path, 0);                                //بررسی تصاویر با کانولوشن غیر بهینه
